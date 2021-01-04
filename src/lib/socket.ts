@@ -4,8 +4,14 @@ import {socketUrl} from "./cfg";
 /**
  * Socket模块
  * */
-export class Sockets {
+class Sockets {
+    private static instance: Sockets;
     public io: Socket;
+
+    static getInstance() {
+        if (!Sockets.instance) Sockets.instance = new Sockets();
+        return Sockets.instance;
+    }
 
     constructor() {
     }
@@ -26,7 +32,7 @@ export class Sockets {
             }, 1000 * 60 * 3)
         });
         this.io.on("message", (data: any) => callback(data));
-        this.io.on("error", (data: any) =>console.log(`[Socket]error ${data.toString()}`));
+        this.io.on("error", (data: any) => console.log(`[Socket]error ${data.toString()}`));
         this.io.on("close", () => console.log("[Socket]close"));
     }
 
@@ -44,3 +50,5 @@ export class Sockets {
         if (this.io && this.io.io._readyState !== "closed") this.io.close();
     }
 }
+
+export const SocketIo = Sockets.getInstance();
