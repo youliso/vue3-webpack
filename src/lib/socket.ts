@@ -1,5 +1,5 @@
 import {io, Socket} from "socket.io-client";
-import {socketUrl} from "./cfg";
+import {socketUrl} from "@/config";
 
 /**
  * Socket模块

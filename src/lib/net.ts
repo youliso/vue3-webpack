@@ -1,4 +1,4 @@
-import {appUrl} from "./cfg";
+import {appUrl} from "@/config";
 
 export interface NetOpt extends RequestInit {
     data?: unknown;
