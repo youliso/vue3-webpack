@@ -60,3 +60,12 @@ export function deepCopy<T>(obj: T): T {
     }
     return objArray;
 }
+
+/**
+ * 设置浏览器头部主题色
+ * */
+export function setBrowserHeadColor(color: string): void {
+    const dom = document;
+    dom.querySelector('meta[name="theme-color"]').setAttribute('content', color);
+    dom.querySelector('meta[name="msapplication-navbutton-color"]').setAttribute('content', color);
+}
