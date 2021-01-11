@@ -43,22 +43,60 @@ export function dateFormat(fmt: string = 'yyyy-MM-dd'): string {
 
 /**
  * 深拷贝
- * @param obj
+ * @param sourceObj
+ * @param targetObj
  */
-export function deepCopy<T>(obj: T): T {
-    let objArray: any = Array.isArray(obj) ? [] : {};
-    if (obj && typeof obj === "object") {
-        for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                if (obj[key] && typeof obj[key] === "object") {
-                    objArray[key] = deepCopy(obj[key]);
-                } else {
-                    objArray[key] = obj[key];
-                }
+export function deepClone(sourceObj: any, targetObj: any) {
+    let cloneObj: any = {};
+    if (!sourceObj || typeof sourceObj !== "object" || sourceObj.length === undefined) {
+        return sourceObj;
+    }
+    if (sourceObj instanceof Array) {
+        cloneObj = sourceObj.concat();
+    } else {
+        for (let i in sourceObj) {
+            if (typeof sourceObj[i] === 'object') {
+                cloneObj[i] = deepClone(sourceObj[i], {});
+            } else {
+                cloneObj[i] = sourceObj[i];
             }
         }
     }
-    return objArray;
+    return cloneObj;
+}
+
+/**
+ * 防抖
+ */
+export function debounce(fun: Function, wait: number) {
+    let timer: number = null;
+    return function () {
+        if (timer !== null) {
+            clearTimeout(timer);
+        }
+        timer = setTimeout(fun, wait);
+    }
+}
+
+/**
+ * 节流
+ */
+export function throttle(fun: Function, delay: number) {
+    let timer: number = null;
+    let startTime = Date.now();
+    return function () {
+        let curTime = Date.now();
+        let remaining = delay - (curTime - startTime);
+        let context = this;
+        let args = arguments;
+        clearTimeout(timer);
+        if (remaining <= 0) {
+            fun.apply(context, args);
+            startTime = Date.now();
+        } else {
+            timer = setTimeout(fun, remaining);
+        }
+    }
 }
 
 /**

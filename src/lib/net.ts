@@ -114,17 +114,16 @@ function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
 export async function net(url: string, param: NetOpt = {}): Promise<any> {
     if (url.indexOf("http://") === -1 && url.indexOf("https://") === -1) url = appUrl + url;
     let sendData: NetOpt = {
-        headers: {
-            "Content-type": "application/json;charset=utf-8",
-            "Authorization": sessionStorage.getItem("Authorization") as string || ""
-        },
+        headers: new Headers(Object.assign({
+                "Content-type": "application/json;charset=utf-8",
+                "Authorization": sessionStorage.getItem("Authorization") as string || ""
+            },
+            param.headers || {})),
         outTime: param.outTime || 30000,
         type: param.type || NET_RESPONSE_TYPE.TEXT,
-        mode: param.mode || "cors",
         method: param.method || "GET",
         signal: param.signal || null
     };
-    if (param.headers) Object.assign(sendData.headers, param.headers);
     if (sendData.method === "GET") url = url + convertObj(param.data);
     else sendData.body = JSON.stringify(param.data);
     return Promise.race([timeoutPromise(sendData.outTime), fetchPromise(url, sendData)])
