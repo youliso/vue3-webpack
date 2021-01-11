@@ -1,19 +1,30 @@
 import {io, Socket} from "socket.io-client";
-import {socketUrl} from "@/config";
+import {ManagerOptions} from "socket.io-client/build/manager";
+import {SocketOptions} from "socket.io-client/build/socket";
+
+const config = require("@/cfg/config.json");
 
 /**
  * Socket模块
  * */
-class Sockets {
-    private static instance: Sockets;
+export class Sockets {
     public io: Socket;
 
-    static getInstance() {
-        if (!Sockets.instance) Sockets.instance = new Sockets();
-        return Sockets.instance;
+    constructor() {
     }
 
-    constructor() {
+    /**
+     * socket.io参数
+     * 参考 ManagerOptions & SocketOptions
+     * url https://socket.io/docs/v3/client-api/#new-Manager-url-options
+     */
+    opts() {
+        let opts: Partial<ManagerOptions & SocketOptions> = {
+            auth: {
+                authorization: sessionStorage.getItem("Authorization") as string || ""
+            }
+        }
+        return opts;
     }
 
     /**
@@ -21,7 +32,7 @@ class Sockets {
      * @param callback
      */
     open(callback: Function) {
-        this.io = io(socketUrl, {query: `Authorization=${sessionStorage.getItem("Authorization")}`});
+        this.io = io(config.socketUrl, this.opts());
         this.io.on("connect", () => {
             console.log("[Socket]connect");
         });
@@ -50,5 +61,3 @@ class Sockets {
         if (this.io && this.io.io._readyState !== "closed") this.io.close();
     }
 }
-
-export const SocketIo = Sockets.getInstance();
