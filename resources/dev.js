@@ -1,8 +1,14 @@
 const webpackDevServer = require('webpack-dev-server');
 const webpack = require('webpack');
 const path = require('path');
+const fs = require('fs');
 
-const port = 3445; //端口
+let port = 0;
+try {
+    port = fs.readFileSync(path.resolve('.port'), 'utf8');
+} catch (e) {
+    throw "not found .port"
+}
 
 async function startRenderer() {
     const config = require('./webpack.config');
