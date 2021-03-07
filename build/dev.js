@@ -10,8 +10,8 @@ try {
     throw "not found .port"
 }
 
-async function startRenderer() {
-    const config = require('./webpack.config');
+async function start() {
+    const config = require('./webpack.config')('development');
     const options = {
         contentBase: path.resolve("dist"),
         hot: true,
@@ -21,14 +21,11 @@ async function startRenderer() {
     webpackDevServer.addDevServerEntrypoints(config, options);
     const compiler = webpack(config);
     const server = new webpackDevServer(compiler, options);
-
     server.listen(port, 'localhost', () => {
-        console.log(`dev server listening on port ${port}`);
+    });
+    server.invalidate(() => {
+        console.log(`Project is running at http://localhost:${port}`);
     });
 }
 
-async function init() {
-    await startRenderer();
-}
-
-init().then();
+start().then();

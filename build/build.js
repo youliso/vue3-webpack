@@ -1,7 +1,7 @@
 const fs = require("fs");
 const webpack = require("webpack");
 const path = require('path');
-const main = require('./webpack.config'); //主进程
+const main = require('./webpack.config');
 
 function deleteFolderRecursive(url) {
     let files = [];
@@ -22,7 +22,7 @@ function deleteFolderRecursive(url) {
 }
 deleteFolderRecursive(path.resolve('dist'));//清除dist
 webpack([
-    {...main}
+    {...main('production')}
 ], (err, stats) => {
     if (err || stats.hasErrors()) {
         // 在这里处理错误
