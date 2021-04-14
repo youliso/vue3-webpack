@@ -26,11 +26,11 @@ export const delExclude = (key: string) => {
  * @param key 唯一标识
  * @param args
  */
-export const provideState = (key: symbol, args: { [key: string]: unknown }) => provide(
-    key,
-    reactive(args)
+export const provideState = (key: string, args: { [key: string]: unknown }) => provide(
+  Symbol(key),
+  reactive(args)
 );
-export const getProvideState = (key: symbol) => inject(key);
+export const getProvideState = (key: string) => inject( Symbol(key));
 
 /**
  * 窗口通信消息内容
