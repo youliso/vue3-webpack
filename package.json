@@ -1,8 +1,8 @@
 {
-  "name": "web",
-  "productName": "web",
+  "name": "vue3-webpack",
+  "productName": "vue3-webpack",
   "version": "0.0.2",
-  "description": "web template",
+  "description": "vue3-webpack template",
   "main": "dist/main.bundle.js",
   "author": {
     "name": "youliso",
@@ -19,6 +19,7 @@
     "esbuild-loader": "^2.11.0",
     "html-webpack-plugin": "^5.3.1",
     "mini-css-extract-plugin": "^1.4.1",
+    "prettier": "^2.2.1",
     "sass": "^1.32.8",
     "sass-loader": "^11.0.1",
     "vue": "^3.0.11",

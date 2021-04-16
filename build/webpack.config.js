@@ -17,11 +17,6 @@ module.exports = (env) => {
       chunkFilename: '[id].bundle.js',
       path: path.resolve('dist')
     },
-    node: {
-      global: false,
-      __dirname: false,
-      __filename: false
-    },
     module: {
       rules: [
         {
