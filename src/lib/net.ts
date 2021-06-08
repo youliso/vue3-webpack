@@ -26,13 +26,13 @@ export function convertObj(data: any): string {
     let value = data[key] as Array<any>;
     if (value && value.constructor == Array) {
       value.forEach((_value) => {
-        _result.push(key + "=" + _value);
+        _result.push(key + '=' + _value);
       });
     } else {
-      _result.push(key + "=" + value);
+      _result.push(key + '=' + value);
     }
   }
-  return _result.join("&");
+  return _result.join('&');
 }
 
 /**
@@ -41,13 +41,16 @@ export function convertObj(data: any): string {
 export function GetQueryJson2(url: string): { [key: string]: unknown } {
   let arr = []; // 存储参数的数组
   let res: { [key: string]: unknown } = {}; // 存储最终JSON结果对象
-  arr = url.split("&"); // 获取浏览器地址栏中的参数
-  for (let i = 0; i < arr.length; i++) { // 遍历参数
-    if (arr[i].indexOf("=") != -1) { // 如果参数中有值
-      let str = arr[i].split("=");
+  arr = url.split('&'); // 获取浏览器地址栏中的参数
+  for (let i = 0; i < arr.length; i++) {
+    // 遍历参数
+    if (arr[i].indexOf('=') != -1) {
+      // 如果参数中有值
+      let str = arr[i].split('=');
       res[str[0]] = str[1];
-    } else { // 如果参数中无值
-      res[arr[i]] = "";
+    } else {
+      // 如果参数中无值
+      res[arr[i]] = '';
     }
   }
   return res;
@@ -86,37 +89,47 @@ function timeoutPromise(outTime: number): Promise<any> {
  */
 function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
   return fetch(url, sendData)
-    .then(res => {
+    .then((res) => {
       if (res.status >= 200 && res.status < 300) return res;
       throw new Error(res.statusText);
     })
     .then(async (res) => {
       switch (sendData.type) {
         case NET_RESPONSE_TYPE.TEXT:
-          return sendData.isQuerystring ? {
-            headers: await res.headers,
-            data: await res.text()
-          } : await res.text();
+          return sendData.isQuerystring
+            ? {
+                headers: await res.headers,
+                data: await res.text()
+              }
+            : await res.text();
         case NET_RESPONSE_TYPE.JSON:
-          return sendData.isQuerystring ? {
-            headers: await res.headers,
-            data: await res.json()
-          } : await res.json();
+          return sendData.isQuerystring
+            ? {
+                headers: await res.headers,
+                data: await res.json()
+              }
+            : await res.json();
         case NET_RESPONSE_TYPE.BUFFER:
-          return sendData.isQuerystring ? {
-            headers: await res.headers,
-            data: await res.arrayBuffer()
-          } : await res.arrayBuffer();
+          return sendData.isQuerystring
+            ? {
+                headers: await res.headers,
+                data: await res.arrayBuffer()
+              }
+            : await res.arrayBuffer();
         case NET_RESPONSE_TYPE.BLOB:
-          return sendData.isQuerystring ? {
-            headers: await res.headers,
-            data: await res.blob()
-          } : await res.blob();
+          return sendData.isQuerystring
+            ? {
+                headers: await res.headers,
+                data: await res.blob()
+              }
+            : await res.blob();
         case NET_RESPONSE_TYPE.FORM_DATA:
-          return sendData.isQuerystring ? {
-            headers: await res.headers,
-            data: await res.formData()
-          } : await res.formData();
+          return sendData.isQuerystring
+            ? {
+                headers: await res.headers,
+                data: await res.formData()
+              }
+            : await res.formData();
       }
     });
 }
@@ -130,11 +143,13 @@ export async function net(url: string, param: NetOpt = {}): Promise<any> {
   if (url.indexOf('http://') === -1 && url.indexOf('https://') === -1) url = appUrl + url;
   let sendData: NetOpt = {
     isQuerystring: param.isQuerystring,
-    headers: new Headers(Object.assign({
+    headers: Object.assign(
+      {
         'Content-type': 'application/json;charset=utf-8',
-        'Authorization': sessionStorage.getItem('Authorization') as string || ''
+        authorization: param.authorization || ''
       },
-      param.headers || {})),
+      param.headers || {}
+    ),
     outTime: param.outTime || 30000,
     type: param.type || NET_RESPONSE_TYPE.TEXT,
     method: param.method || 'GET',
@@ -143,9 +158,9 @@ export async function net(url: string, param: NetOpt = {}): Promise<any> {
 
   if (!!param.data) {
     if (sendData.method === 'GET') url = `${url}?${convertObj(param.data)}`;
-    else if (sendData.isQuerystring) sendData.body = convertObj(param.data);
     else sendData.body = JSON.stringify(param.data);
   }
-  return Promise.race([timeoutPromise(sendData.outTime), fetchPromise(url, sendData)])
-    .catch(err => errorReturn(err.message));
+  return Promise.race([timeoutPromise(sendData.outTime), fetchPromise(url, sendData)]).catch(
+    (err) => errorReturn(err.message)
+  );
 }

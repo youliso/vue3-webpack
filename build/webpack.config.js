@@ -56,6 +56,19 @@ module.exports = (env) => {
           ]
         },
         {
+          test: /\.less$/,
+          use: [
+            {
+              loader: miniCssExtractPlugin.loader,
+              options: {
+                publicPath: './'
+              }
+            },
+            'css-loader',
+            'less-loader'
+          ]
+        },
+        {
           test: /\.(png|svg|jpg|gif|ico|woff|woff2|eot|ttf|otf)$/,
           type: 'asset/resource'
         }
