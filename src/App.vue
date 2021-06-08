@@ -1,21 +1,24 @@
 <template>
-  <router-view v-slot='{ Component }'>
-    <keep-alive :include='include' :exclude='exclude' :max='max'>
-      <component :is='Component' />
+  <router-view v-slot="{ Component }">
+    <keep-alive
+      :include="keepAliveData.include"
+      :exclude="keepAliveData.exclude"
+      :max="keepAliveData.max"
+    >
+      <component :is="Component" />
     </keep-alive>
   </router-view>
 </template>
-<script lang='ts'>
-import { toRefs } from 'vue';
-import { keepAliveOpt } from './store';
+<script lang="ts">
+import { keepAliveData } from './store';
 
 export default {
   setup() {
-    return { ...toRefs(keepAliveOpt) };
+    return { keepAliveData };
   }
 };
 </script>
-<style lang='scss'>
+<style lang="scss">
 @import 'views/scss/color';
 @import 'views/scss/main';
 </style>
