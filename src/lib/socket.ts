@@ -1,8 +1,7 @@
 import { io, Socket as SocketIo } from 'socket.io-client';
 import { ManagerOptions } from 'socket.io-client/build/manager';
 import { SocketOptions } from 'socket.io-client/build/socket';
-
-const config = require('@/cfg/config.json');
+import { socketUrl } from '@/cfg';
 
 /**
  * Socket模块
@@ -14,13 +13,14 @@ export class Socket {
    * 参考 ManagerOptions & SocketOptions
    * url https://socket.io/docs/v3/client-api/#new-Manager-url-options
    */
-  public opts: Partial<ManagerOptions & SocketOptions> = {
-    auth: {
-      authorization: sessionStorage.getItem('Authorization') as string || ''
-    }
-  };
+  public opts: Partial<ManagerOptions & SocketOptions> = {};
 
-  constructor() {
+  constructor(opts: Partial<ManagerOptions & SocketOptions>) {
+    this.opts = opts || {
+      auth: {
+        authorization: sessionStorage.getItem('Authorization') as string || ''
+      }
+    };
   }
 
   /**
@@ -28,7 +28,7 @@ export class Socket {
    * @param callback
    */
   open(callback: Function) {
-    this.io = io(config.socketUrl, this.opts);
+    this.io = io(socketUrl, this.opts);
     this.io.on('connect', () => {
       console.log('[Socket]connect');
     });

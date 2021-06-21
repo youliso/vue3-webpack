@@ -1,4 +1,4 @@
-import { appUrl } from '@/config';
+import { appUrl } from '@/cfg';
 
 export interface NetOpt extends RequestInit {
   authorization?: string;
